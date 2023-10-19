@@ -67,6 +67,8 @@ defmodule PdfGenerator do
             wkhtml_path:                         Application.get_env(:pdf_generator, :wkhtml_path),
             pdftk_path:                          Application.get_env(:pdf_generator, :pdftk_path),
             raise_on_missing_wkhtmltopdf_binary: Application.get_env(:pdf_generator, :raise_on_missing_wkhtmltopdf_binary, true),
+            raise_on_missing_chrome_binary:      Application.get_env(:pdf_generator, :raise_on_missing_chrome_binary, true),
+            raise_on_missing_weasyprint_binary:  Application.get_env(:pdf_generator, :raise_on_missing_weasyprint_binary, true),
           ]]
         )
       ]
