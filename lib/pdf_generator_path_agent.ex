@@ -58,20 +58,24 @@ defmodule PdfGenerator.PathAgent do
 
     * `:raise_on_missing_wkhtmltopdf_binary`
     * `:raise_on_missing_chrome_binary`
+    * `:raise_on_missing_weasyprint_binary`
     * `:raise_on_missing_binaries` -> raises on either binary missing
 
   """
   def raise_or_continue(options) do
     wkhtml_exists = File.exists?(options[:wkhtml_path] || "")
     chrome_exists = File.exists?(options[:chrome_path] || "")
+    weasyprint_exists = File.exists?(options[:weasyprint_path] || "")
 
     raise_on_wkhtml_missing = options[:raise_on_missing_wkhtmltopdf_binary]
     raise_on_chrome_missing = options[:raise_on_missing_chrome_binary]
-    raise_on_any_missing =    options[:raise_on_missing_binaries]
+    raise_on_weasyprint_missing = options[:raise_on_missing_weasyprint_binary]
+    raise_on_any_missing = options[:raise_on_missing_binaries]
 
     maybe_raise(:wkhtml, raise_on_wkhtml_missing, wkhtml_exists)
     maybe_raise(:chrome, raise_on_chrome_missing, chrome_exists)
-    maybe_raise(:any,    raise_on_any_missing, wkhtml_exists or chrome_exists)
+    maybe_raise(:weasyprint, raise_on_weasyprint_missing, weasyprint_exists)
+    maybe_raise(:any, raise_on_any_missing, wkhtml_exists or chrome_exists or weasyprint_exists)
 
     options
   end
@@ -81,7 +85,10 @@ defmodule PdfGenerator.PathAgent do
   defp maybe_raise(_generator, _config_says_raise = _,     _executable_exists = _    ), do: :noop
 
   defp missing_message(:wkhtml), do: "wkhtmltopdf executable was not found on your system"
-  defp missing_message(:chrome), do: "chrome-headless-render-pdf executable was not found on your system"
-  defp missing_message(:any),    do: "neither wkhtmltopdf or chrome-headless-render-pdf executables were found on your system"
 
+  defp missing_message(:chrome), do: "chrome-headless-render-pdf executable was not found on your system"
+
+  defp missing_message(:weasyprint), do: "weasyprint executable was not found on your system"
+
+  defp missing_message(:any), do: "neither wkhtmltopdf, chrome-headless-render-pdf or weasyprint executables were found on your system"
 end
